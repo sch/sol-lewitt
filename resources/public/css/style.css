@@ -1,0 +1,22 @@
+#app {
+  height: 300px;
+}
+
+body {
+  margin: 0;
+}
+
+.Work {
+  font-family: "Inconsolata LGC", monospace;
+  background-color: #EEE;
+  padding: 1em;
+}
+
+.Work-title {
+  margin-bottom: 0.618em;
+  font-weight: bold;
+}
+
+.Work-algorithm {
+  margin-bottom: 0.618em;
+}
