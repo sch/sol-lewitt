@@ -54,15 +54,24 @@
 (defn vertical-line [x height]
   (line (point x 0) (point x height)))
 
+(defn horizontal-line [y width]
+  (line (point 0 y) (point width y)))
+
 (defn vertical-lines
   [spacing size]
   (map (fn [x] (vertical-line x (:height size)))
        (range 0 (:width size) spacing)))
 
+(defn horizontal-lines
+  [spacing size]
+  (map (fn [y] (horizontal-line y (:width size)))
+       (range 0 (:height size) spacing)))
+
 (def sample-line (line (point 20 20) (point 200 200)))
 (def sample-line-2 (vertical-line 30 500))
 
-(def drawing {:lines (vertical-lines 20 (size 3000 200))})
+(def drawing {:lines (concat (vertical-lines 20 (size 3000 200))
+                             (horizontal-lines 20 (size 3000 200)))})
 
 (rum/mount (svg (get-dimensions!) drawing) (dom/getElement "app"))
 
