@@ -1,52 +1,31 @@
-# sol-lewitt
+<p align="center">
+  <img title="Wall Drawing 419" alt="Wall Drawing 419" src="https://raw.githubusercontent.com/sch/sol-lewitt/master/resources/public/img/image.jpeg" />
+</p>
 
-FIXME: Write a one-line description of your library/project.
+> The wall is bordered and divided horizontally and vertically into four equal parts with a 6-inch (15 cm) black ink band. Each quarter has alternating parallel 6-inch (15 cm) bands of white and color ink bands. Upper left: gray; upper right: yellow; lower left: red; lower right: blue.
+>
+> — [Wall Drawing 419](http://www.massmoca.org/lewitt/walldrawing.php?id=419)
 
-## Overview
+Sol LeWitt created instructional artworks, and left the implementation to draftsmen. This project aims to create a declarative grammar for these types of artworks where the computer can do the drafting.
 
-FIXME: Write a paragraph about the library/project and highlight its goals.
 
-## Setup
+## Getting it running
 
-To get an interactive development environment run:
+This is your typical figwheel song and dance:
 
     lein figwheel
-
-and open your browser at [localhost:3449](http://localhost:3449/).
-This will auto compile and send all changes to the browser without the
-need to reload. After the compilation process is complete, you will
-get a Browser Connected REPL. An easy way to try it is:
-
-    (js/alert "Am I connected?")
-
-and you should see an alert in the browser window.
-
-To clean all compiled files:
-
-    lein clean
-
-To create a production build run:
-
-    lein cljsbuild once min
-
-And open your browser in `resources/public/index.html`. You will not
-get live reloading, nor a REPL. 
-
-## License
-
-Copyright © 2014 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
+    open http://localhost:3449
 
 
-
-
-
-# OK now, my stuff
+## Some notes about closure SVG
 
 Some SVG info: the closure libraries used to have a generic drawing API that's implemented in canvas, SVG, and VML modules. They deprecated it.
 
-The SVG lib is pretty useful still though, and this project uses it for low-level drawing commands without incurring heavy libs like Snap.svg or building it up with a virtual dom library, since we're simply re-drawing everything when changes occur. Maybe unwise.
+The SVG lib is pretty useful still though, and this project uses it for low-level drawing commands without incurring heavy libs like Snap.svg or building it up with a virtual dom library, since we're simply re-drawing everything when changes occur. Maybe unwise. A likely change will be re-implementing the drawing functions with Quiescent.
 
 
+## Some useful resources
 
+- http://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html
+- http://svgpocketguide.com/book/
+- https://closure-library.googlecode.com/git-history/docs/class_goog_graphics_SvgGraphics.html
