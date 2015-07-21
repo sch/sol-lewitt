@@ -37,3 +37,16 @@ get live reloading, nor a REPL.
 Copyright © 2014 FIXME
 
 Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
+
+
+
+
+
+# OK now, my stuff
+
+Some SVG info: the closure libraries used to have a generic drawing API that's implemented in canvas, SVG, and VML modules. They deprecated it.
+
+The SVG lib is pretty useful still though, and this project uses it for low-level drawing commands without incurring heavy libs like Snap.svg or building it up with a virtual dom library, since we're simply re-drawing everything when changes occur. Maybe unwise.
+
+
+

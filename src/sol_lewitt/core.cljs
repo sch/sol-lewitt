@@ -1,7 +1,7 @@
 (ns ^:figwheel-always sol-lewitt.core
     (:require
       [goog.dom :as dom]
-      [goog.graphics.SvgGraphics :as svg]))
+      [goog.graphics :as graphics]))
 
 (enable-console-print!)
 
@@ -18,13 +18,66 @@
   ;; (swap! app-state update-in [:__figwheel_counter] inc)
 )
 
-(defn get-dimensions
+(defn get-dimensions!
   "Return the dimensions of the viewable window"
   []
   (let [viewport-size (dom/getViewportSize (dom/getWindow))]
-    [(aget viewport-size "width") (aget viewport-size "height")]))
+       {:width (aget viewport-size "width")
+        :height (aget viewport-size "height")}))
 
-(println (get-dimensions))
+(println (get-dimensions!))
+
+
+(defn draw-svg!
+  "Instantiate an empty SvgGraphics object with the given dimensions map"
+  [dimensions]
+  (let [w (:width dimensions)
+        h (:height dimensions)
+        svg-graphics (new graphics/SvgGraphics w h)]
+       (.createDom svg-graphics)
+       svg-graphics))
+
+(defn render
+  [svg id]
+  (dom/appendChild (dom/getElement id) (.getElement svg)))
+
+(defn line
+  [x1 y1 x2 y2]
+  (.lineTo (.moveTo (new graphics/Path) x1 y1) x2 y2))
+
+
+(defn stroke
+  "build a dumb google stroke object"
+  []
+  (new graphics/Stroke 1 "#333"))
+
+(defn add-line
+  "Add a line to an svg object"
+  [svg x1 y1 x2 y2]
+  (.drawPath svg (line x1 y1 x2 y2) (stroke))
+  svg)
+
+(defn add-vertical-line
+  [svg x]
+  (add-line svg x 0 x (aget (.getPixelSize svg) "height"))
+  svg)
+
+(defn add-vertical-lines
+  "Make a bunch of vertical lines spaced apart "
+  [svg spacing]
+  (let [extent (aget (.getPixelSize svg) "width")]
+       (reduce (fn [svg x] (add-vertical-line svg x))
+               svg
+               (range 0 extent spacing))))
+
+
+(defn new-canvas []
+  (draw-svg! (get-dimensions!)))
+
+(let [canvas (draw-svg! (get-dimensions!))]
+     (render (-> canvas
+                 (add-vertical-lines 30)
+                 (add-vertical-lines 50)) "app"))
 
 (defn style-elem
   "Style an element"
