@@ -17,15 +17,13 @@ This is your typical figwheel song and dance:
     open http://localhost:3449
 
 
-## Some notes about closure SVG
+## Some notes about SVG rendering
 
-Some SVG info: the closure libraries used to have a generic drawing API that's implemented in canvas, SVG, and VML modules. They deprecated it.
+This is using rum to build of a tree of SVG elements. Right now, the `svg` component takes a `drawing` definition map, which it knows how to destructure into SVG elements. This is kind of awkward, but I'm going with it as a possible path.
 
-The SVG lib is pretty useful still though, and this project uses it for low-level drawing commands without incurring heavy libs like Snap.svg or building it up with a virtual dom library, since we're simply re-drawing everything when changes occur. Maybe unwise. A likely change will be re-implementing the drawing functions with Quiescent.
-
+Side-note: do none of these clojurescript react wrappers support component definitions that can display `children` props? This is a [super useful(https://facebook.github.io/react/docs/multiple-components.html#children) feature in react, and it's surprising not finding that functionality in any of these libs (reagent, quiescent, rum).
 
 ## Some useful resources
 
 - http://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html
 - http://svgpocketguide.com/book/
-- https://closure-library.googlecode.com/git-history/docs/class_goog_graphics_SvgGraphics.html
