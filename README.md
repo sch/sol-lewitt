@@ -26,4 +26,5 @@ Side-note: do none of these clojurescript react wrappers support component defin
 ## Some useful resources
 
 - http://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html
-- http://svgpocketguide.com/book/
+- http://svgpocketguide.com/book
+- http://sarabander.github.io/sicp/html/2_002e2.xhtml#g_t2_002e2_002e4

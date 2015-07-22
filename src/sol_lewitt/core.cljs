@@ -3,6 +3,8 @@
       [goog.dom :as dom]
       [rum]))
 
+(defn log [item] (.log js/console (pr-str item)))
+
 (enable-console-print!)
 
 (println "Starting app...")
@@ -24,24 +26,35 @@
        {:width (aget viewport-size "width")
         :height (aget viewport-size "height")}))
 
+(rum/defc drawing-information [project]
+  [:div
+   {:class "Work"}
+   [:div {:class "Work-title"} (:title project)]
+   [:div {:class "Work-algorithm"} (:instructions project)]
+   [:div
+    {:class "Work-meta"}
+    [:a {:href (:url project)} "Mass MoCA Piece"]]])
+
 
 (rum/defc svg-line [line]
-  [:line
-   {:x1 (:x (:start-point line))
-    :y1 (:y (:start-point line))
-    :x2 (:x (:end-point line))
-    :y2 (:y (:end-point line))
-    :stroke (:color line)
-    :stroke-width 1}])
+  [:line {:x1 (:x (:start-point line))
+          :y1 (:y (:start-point line))
+          :x2 (:x (:end-point line))
+          :y2 (:y (:end-point line))
+          :stroke (:color line)
+          :stroke-width 1}])
 
 (rum/defc svg-group [contents]
-  [:g (map (fn []) contents)])
+  [:g nil contents])
 
 (rum/defc svg [size drawing]
-  [:svg
-   {:width (:width size)
-    :height (:height size)}
-   (map svg-line (:lines drawing))])
+  (let [line-groups (:lines (:groups drawing))]
+    [:svg
+     {:width (:width size)
+      :height (:height size)}
+     (map (fn [line-group] [:g nil (map svg-line line-group)])
+          line-groups)]))
+
 
 (defn size [width height] {:width width :height height})
 
@@ -60,18 +73,30 @@
 (defn vertical-lines
   [spacing size]
   (map (fn [x] (vertical-line x (:height size)))
-       (range 0 (:width size) spacing)))
+       (range spacing (:width size) spacing)))
 
 (defn horizontal-lines
   [spacing size]
   (map (fn [y] (horizontal-line y (:width size)))
-       (range 0 (:height size) spacing)))
+       (range spacing (:height size) spacing)))
+
+
+;; Some Definitions to play around with ::
 
 (def sample-line (line (point 20 20) (point 200 200)))
 (def sample-line-2 (vertical-line 30 500))
 
-(def drawing {:lines (concat (vertical-lines 20 (size 3000 200))
-                             (horizontal-lines 20 (size 3000 200)))})
+(def verticals (vertical-lines 20 (size 3000 200)))
+(def horizontals (horizontal-lines 20 (size 3000 200)))
 
-(rum/mount (svg (get-dimensions!) drawing) (dom/getElement "app"))
+(def drawing-17-information {:title "Wall Drawing 17"
+                             :instructions "Four-part drawing with a different line direction in each part"
+                             :url "http://www.massmoca.org/lewitt/walldrawing.php?id=17"})
+(def drawing-17 {:groups {:lines [verticals horizontals]}})
 
+(rum/defc project
+  [dimensions drawing information]
+  [:div nil (svg dimensions drawing) (drawing-information information)])
+
+(rum/mount (project (get-dimensions!) drawing-17 drawing-17-information)
+           (dom/getElement "app"))
