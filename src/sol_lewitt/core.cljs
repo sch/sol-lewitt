@@ -36,7 +36,7 @@
     [:a {:href (:url project)} "Mass MoCA Piece"]]])
 
 
-(rum/defc svg-line [line]
+(defn svg-line [line]
   [:line {:x1 (:x (:start-point line))
           :y1 (:y (:start-point line))
           :x2 (:x (:end-point line))
@@ -44,16 +44,14 @@
           :stroke (:color line)
           :stroke-width 1}])
 
-(rum/defc svg-group [contents]
+(defn svg-group [contents]
   [:g nil contents])
 
 (rum/defc svg [size drawing]
-  (let [line-groups (:lines (:groups drawing))]
-    [:svg
-     {:width (:width size)
-      :height (:height size)}
-     (map (fn [line-group] [:g nil (map svg-line line-group)])
-          line-groups)]))
+  [:svg
+   {:width (:width size)
+    :height (:height size)}
+   drawing])
 
 
 (defn size [width height] {:width width :height height})
@@ -92,11 +90,18 @@
 (def drawing-17-information {:title "Wall Drawing 17"
                              :instructions "Four-part drawing with a different line direction in each part"
                              :url "http://www.massmoca.org/lewitt/walldrawing.php?id=17"})
-(def drawing-17 {:groups {:lines [verticals horizontals]}})
+
+(def drawing-17 [:g
+                 nil
+                 (svg-group (map svg-line verticals))
+                 (svg-group (map svg-line horizontals))])
+
 
 (rum/defc project
   [dimensions drawing information]
   [:div nil (svg dimensions drawing) (drawing-information information)])
 
-(rum/mount (project (get-dimensions!) drawing-17 drawing-17-information)
+(rum/mount (project (get-dimensions!)
+                    drawing-17
+                    drawing-17-information)
            (dom/getElement "app"))
