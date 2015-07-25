@@ -44,8 +44,14 @@
           :stroke (:color line)
           :stroke-width 1}])
 
-(defn svg-group [contents]
-  [:g nil contents])
+(defn svg-translation-string
+  "String used for the translation attribute of an svg element"
+  [point]
+  (str "translate(" (:x point) ", " (:y point) ")"))
+
+(defn svg-group
+  ([contents] [:g nil contents])
+  ([contents offset] [:g {:transform (svg-translation-string offset)} contents]))
 
 (rum/defc svg [size drawing]
   [:svg
@@ -53,14 +59,14 @@
     :height (:height size)}
    drawing])
 
-
 (defn size [width height] {:width width :height height})
 
 (defn point [x y] {:x x :y y})
 
-(defn line [start-point end-point] {:start-point start-point
-                                    :end-point end-point
-                                    :color "green"})
+(defn line [start-point end-point]
+  {:start-point start-point
+   :end-point end-point
+   :color "green"})
 
 (defn vertical-line [x height]
   (line (point x 0) (point x height)))
@@ -71,12 +77,12 @@
 (defn vertical-lines
   [spacing size]
   (map (fn [x] (vertical-line x (:height size)))
-       (range spacing (:width size) spacing)))
+       (range 0 (inc (:width size)) spacing)))
 
 (defn horizontal-lines
   [spacing size]
   (map (fn [y] (horizontal-line y (:width size)))
-       (range spacing (:height size) spacing)))
+       (range 0 (inc (:height size)) spacing)))
 
 
 ;; Some Definitions to play around with ::
@@ -84,18 +90,19 @@
 (def sample-line (line (point 20 20) (point 200 200)))
 (def sample-line-2 (vertical-line 30 500))
 
-(def verticals (vertical-lines 20 (size 3000 200)))
-(def horizontals (horizontal-lines 20 (size 3000 200)))
+(def verticals (vertical-lines 20 (size 200 200)))
+(def horizontals (horizontal-lines 20 (size 200 200)))
 
-(def drawing-17-information {:title "Wall Drawing 17"
-                             :instructions "Four-part drawing with a different line direction in each part"
-                             :url "http://www.massmoca.org/lewitt/walldrawing.php?id=17"})
+(def drawing-17-information
+  {:title "Wall Drawing 17"
+   :instructions "Four-part drawing with a different line direction in each part"
+   :url "http://www.massmoca.org/lewitt/walldrawing.php?id=17"})
 
-(def drawing-17 [:g
-                 nil
-                 (svg-group (map svg-line verticals))
-                 (svg-group (map svg-line horizontals))])
-
+(def drawing-17
+  [:g
+   nil
+   (svg-group (map svg-line verticals) {:x 300 :y 50})
+   (svg-group (map svg-line horizontals) {:x 50 :y 50})])
 
 (rum/defc project
   [dimensions drawing information]
