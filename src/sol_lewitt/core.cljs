@@ -26,7 +26,7 @@
        {:width (aget viewport-size "width")
         :height (aget viewport-size "height")}))
 
-(rum/defc drawing-information [project]
+(rum/defcc drawing-information [project]
   [:div
    {:class "Work"}
    [:div {:class "Work-title"} (:title project)]
@@ -46,14 +46,14 @@
 
 (defn svg-translation-string
   "String used for the translation attribute of an svg element"
-  [point]
-  (str "translate(" (:x point) ", " (:y point) ")"))
+  [{:keys [x, y]}]
+  (str "translate(" x ", " y ")"))
 
 (defn svg-group
   ([contents] [:g nil contents])
   ([contents offset] [:g {:transform (svg-translation-string offset)} contents]))
 
-(rum/defc svg [size drawing]
+(rum/defcc svg [size drawing]
   [:svg
    {:width (:width size)
     :height (:height size)}
@@ -84,7 +84,6 @@
   (map (fn [y] (horizontal-line y (:width size)))
        (range 0 (inc (:height size)) spacing)))
 
-
 ;; Some Definitions to play around with ::
 
 (def sample-line (line (point 20 20) (point 200 200)))
@@ -104,7 +103,7 @@
    (svg-group (map svg-line verticals) {:x 300 :y 50})
    (svg-group (map svg-line horizontals) {:x 50 :y 50})])
 
-(rum/defc project
+(rum/defcc project
   [dimensions drawing information]
   [:div nil (svg dimensions drawing) (drawing-information information)])
 
