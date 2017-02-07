@@ -1,7 +1,7 @@
 (ns ^:figwheel-always sol-lewitt.core
     (:require
       [goog.dom :as dom]
-      [rum]))
+      [rum.core :as rum]))
 
 (defn log [item] (.log js/console (pr-str item)))
 
