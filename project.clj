@@ -1,45 +1,45 @@
 (defproject sol-lewitt "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+ :description "Geometric drawings generated from descriptions"
+ :url "http://github.com/sch/sol-lewitt"
+ :license {:name "Eclipse Public License"
+           :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.456"]
-                 [org.clojure/core.async "0.2.395"]
-                 [rum "0.10.8"]]
+ :dependencies [[org.clojure/clojure "1.8.0"]
+                [org.clojure/clojurescript "1.9.494"]
+                [org.clojure/core.async "0.3.442"]
+                [rum "0.10.8"]]
 
-  :plugins [[lein-cljsbuild "1.1.5"]
-            [lein-figwheel "0.5.9"]]
+ :plugins [[lein-cljsbuild "1.1.5"]
+           [lein-figwheel "0.5.9"]]
 
-  :source-paths ["src"]
+ :source-paths ["src"]
 
-  :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
+ :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
 
-  :cljsbuild {
-    :builds [{:id "dev"
-              :source-paths ["src"]
+ :cljsbuild {
+             :builds [{:id "dev"
+                       :source-paths ["src"]
 
-              :figwheel { :on-jsload "sol-lewitt.core/on-js-reload" }
+                       :figwheel { :on-jsload "sol-lewitt.core/on-js-reload"}
 
-              :compiler {:main sol-lewitt.core
-                         :asset-path "js/compiled/out"
-                         :output-to "resources/public/js/compiled/sol_lewitt.js"
-                         :output-dir "resources/public/js/compiled/out"
-                         :source-map-timestamp true }}
-             {:id "min"
-              :source-paths ["src"]
-              :compiler {:output-to "resources/public/js/compiled/sol_lewitt.js"
-                         :main sol-lewitt.core
-                         :optimizations :advanced
-                         :pretty-print false}}]}
+                       :compiler {:main sol-lewitt.core
+                                  :asset-path "js/compiled/out"
+                                  :output-to "resources/public/js/compiled/sol_lewitt.js"
+                                  :output-dir "resources/public/js/compiled/out"
+                                  :source-map-timestamp true}}
+                      {:id "min"
+                       :source-paths ["src"]
+                       :compiler {:output-to "resources/public/js/compiled/sol_lewitt.js"
+                                  :main sol-lewitt.core
+                                  :optimizations :advanced
+                                  :pretty-print false}}]}
 
-  :figwheel {
+ :figwheel {
              ;; :http-server-root "public" ;; default and assumes "resources"
              ;; :server-port 3449 ;; default
              ;; :server-ip "127.0.0.1"
 
-             :css-dirs ["resources/public/css"] ;; watch and update CSS
+            :css-dirs ["resources/public/css"]}) ;; watch and update CSS
 
              ;; Start an nREPL server into the running figwheel process
              ;; :nrepl-port 7888
@@ -63,5 +63,5 @@
              ;; :repl false
 
              ;; to configure a different figwheel logfile path
-             ;; :server-logfile "tmp/logs/figwheel-logfile.log" 
-             })
+             ;; :server-logfile "tmp/logs/figwheel-logfile.log"
+

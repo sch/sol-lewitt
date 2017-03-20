@@ -1,7 +1,7 @@
 (ns ^:figwheel-always sol-lewitt.core
-    (:require
-      [goog.dom :as dom]
-      [rum.core :as rum]))
+  (:require
+    [goog.dom :as dom]
+    [rum.core :as rum]))
 
 (defn log [item] (.log js/console (pr-str item)))
 
@@ -13,20 +13,20 @@
 
 (defonce app-state (atom {:text "Hello world!"}))
 
-(defn on-js-reload []
-  ;; optionally touch your app-state to force rerendering depending on
-  ;; your application
-  ;; (swap! app-state update-in [:__figwheel_counter] inc)
-)
+(defn on-js-reload [])
+;; optionally touch your app-state to force rerendering depending on
+;; your application
+;; (swap! app-state update-in [:__figwheel_counter] inc)
+
 
 (defn get-dimensions!
   "Return the dimensions of the viewable window"
   []
   (let [viewport-size (dom/getViewportSize (dom/getWindow))]
-       {:width (aget viewport-size "width")
-        :height (aget viewport-size "height")}))
+    {:width (aget viewport-size "width")
+     :height (aget viewport-size "height")}))
 
-(rum/defcc drawing-information [project]
+(defn drawing-information [project]
   [:div
    {:class "Work"}
    [:div {:class "Work-title"} (:title project)]
@@ -53,11 +53,11 @@
   ([contents] [:g nil contents])
   ([contents offset] [:g {:transform (svg-translation-string offset)} contents]))
 
-(rum/defcc svg [size drawing]
+(defn svg [size drawing]
   [:svg
    {:width (:width size)
     :height (:height size)}
-   drawing])
+   [drawing]])
 
 (defn size [width height] {:width width :height height})
 
@@ -100,10 +100,12 @@
 (def drawing-17
   [:g
    nil
-   (svg-group (map svg-line verticals) {:x 300 :y 50})
-   (svg-group (map svg-line horizontals) {:x 50 :y 50})])
+   (svg-group (map svg-line verticals)   {:x 300 :y 50})
+   (svg-group (map svg-line horizontals) {:x 50 :y 50})
+   (svg-group (map svg-line verticals)   {:x 50 :y 300})
+   (svg-group (map svg-line horizontals) {:x 300 :y 300})])
 
-(rum/defcc project
+(rum/defc project
   [dimensions drawing information]
   [:div nil (svg dimensions drawing) (drawing-information information)])
 

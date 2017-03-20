@@ -21,7 +21,7 @@ This is your typical figwheel song and dance:
 
 This is using rum to build of a tree of SVG elements. Right now, the `svg` component takes a `drawing` definition map, which it knows how to destructure into SVG elements. This is kind of awkward, but I'm going with it as a possible path.
 
-Side-note: do none of these clojurescript react wrappers support component definitions that can display `children` props? This is a [super useful(https://facebook.github.io/react/docs/multiple-components.html#children) feature in react, and it's surprising not finding that functionality in any of these libs (reagent, quiescent, rum).
+Side-note: do none of these clojurescript react wrappers support component definitions that can display `children` props? This is a [super useful](https://facebook.github.io/react/docs/multiple-components.html#children) feature in react, and it's surprising not finding that functionality in any of these libs (reagent, quiescent, rum).
 
 Oh, probable answer: that pattern is pretty uncommon with hiccup/reagent style components, because you're just building up one big vector of HTML. So rather than wanting to do something like:
 
