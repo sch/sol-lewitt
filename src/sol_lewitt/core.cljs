@@ -1,7 +1,7 @@
 (ns ^:figwheel-always sol-lewitt.core
-  (:require
-    [goog.dom :as dom]
-    [rum.core :as rum]))
+ (:require
+   [goog.dom :as dom]
+   [rum.core :as rum]))
 
 (defn log [item] (.log js/console (pr-str item)))
 
@@ -27,12 +27,10 @@
      :height (aget viewport-size "height")}))
 
 (defn drawing-information [project]
-  [:div
-   {:class "Work"}
-   [:div {:class "Work-title"} (:title project)]
-   [:div {:class "Work-algorithm"} (:instructions project)]
-   [:div
-    {:class "Work-meta"}
+  [:div.Work
+   [:div.Work-title (:title project)]
+   [:div.Work-algorithm (:instructions project)]
+   [:div.Work-meta
     [:a {:href (:url project)} "Mass MoCA Piece"]]])
 
 
@@ -57,7 +55,7 @@
   [:svg
    {:width (:width size)
     :height (:height size)}
-   [drawing]])
+   drawing])
 
 (defn size [width height] {:width width :height height})
 
