@@ -1,7 +1,8 @@
 (ns ^:figwheel-always sol-lewitt.core
  (:require
    [goog.dom :as dom]
-   [rum.core :as rum]))
+   [rum.core :as rum]
+   [sol-lewitt.drawings :as drawings]))
 
 (defn log [item] (.log js/console (pr-str item)))
 
@@ -19,19 +20,19 @@
 ;; (swap! app-state update-in [:__figwheel_counter] inc)
 
 
-(defn get-dimensions!
+(defn get-viewport-dimensions!
   "Return the dimensions of the viewable window"
   []
   (let [viewport-size (dom/getViewportSize (dom/getWindow))]
     {:width (aget viewport-size "width")
      :height (aget viewport-size "height")}))
 
-(defn drawing-information [project]
+(defn drawing-information [drawing]
   [:div.Work
-   [:div.Work-title (:title project)]
-   [:div.Work-algorithm (:instructions project)]
+   [:div.Work-title (:title drawing)]
+   [:div.Work-algorithm (:instructions drawing)]
    [:div.Work-meta
-    [:a {:href (:url project)} "Mass MoCA Piece"]]])
+    [:a {:href (:url drawing)} "Mass MoCA Piece"]]])
 
 
 (defn svg-line [line]
@@ -39,7 +40,7 @@
           :y1 (:y (:start-point line))
           :x2 (:x (:end-point line))
           :y2 (:y (:end-point line))
-          :stroke (:color line)
+          :stroke "gray" #_(:color "teal")
           :stroke-width 1}])
 
 (defn svg-translation-string
@@ -48,14 +49,14 @@
   (str "translate(" x ", " y ")"))
 
 (defn svg-group
-  ([contents] [:g nil contents])
+  ([contents] [:g contents])
   ([contents offset] [:g {:transform (svg-translation-string offset)} contents]))
 
-(defn svg [size drawing]
+(defn svg [size generate-drawing]
   [:svg
    {:width (:width size)
     :height (:height size)}
-   drawing])
+   (map svg-line (generate-drawing size))])
 
 (defn size [width height] {:width width :height height})
 
@@ -64,7 +65,7 @@
 (defn line [start-point end-point]
   {:start-point start-point
    :end-point end-point
-   :color "green"})
+   :color "aquamarine"})
 
 (defn vertical-line [x height]
   (line (point x 0) (point x height)))
@@ -82,32 +83,28 @@
   (map (fn [y] (horizontal-line y (:width size)))
        (range 0 (inc (:height size)) spacing)))
 
-;; Some Definitions to play around with ::
-
 (def sample-line (line (point 20 20) (point 200 200)))
 (def sample-line-2 (vertical-line 30 500))
 
 (def verticals (vertical-lines 20 (size 200 200)))
 (def horizontals (horizontal-lines 20 (size 200 200)))
 
-(def drawing-17-information
-  {:title "Wall Drawing 17"
-   :instructions "Four-part drawing with a different line direction in each part"
-   :url "http://www.massmoca.org/lewitt/walldrawing.php?id=17"})
+(defn arbitrary-html
+  ([html] (arbitrary-html nil html))
+  ([props html] [:div (merge {:__dangerouslySetInnerHTML {:__html html}} props)]))
 
 (def drawing-17
   [:g
-   nil
    (svg-group (map svg-line verticals)   {:x 300 :y 50})
    (svg-group (map svg-line horizontals) {:x 50 :y 50})
    (svg-group (map svg-line verticals)   {:x 50 :y 300})
-   (svg-group (map svg-line horizontals) {:x 300 :y 300})])
+   (svg-group (map svg-line horizontals) {:x 300 :y 300})
+   (svg-group (map svg-line horizontals) {:x 650 :y 50})])
 
 (rum/defc project
-  [dimensions drawing information]
-  [:div nil (svg dimensions drawing) (drawing-information information)])
+  [dimensions drawing]
+  [:div (svg dimensions (:algorithm drawing))
+        (drawing-information drawing)])
 
-(rum/mount (project (get-dimensions!)
-                    drawing-17
-                    drawing-17-information)
+(rum/mount (project (get-viewport-dimensions!) drawings/drawing-86)
            (dom/getElement "app"))
