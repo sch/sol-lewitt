@@ -1,23 +1,31 @@
-#app {
-  height: 300px;
-}
-
 body {
   margin: 0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
 }
 
+
 .Work {
-  font-family: "Inconsolata LGC", monospace;
+  color: #333;
   background-color: #EEE;
   padding: 1em;
+}
+
+.Work a {
+  color: inherit;
 }
 
 .Work-title {
   margin-bottom: 0.618em;
   font-weight: bold;
+  float: left;
+  margin-right: 5em;
+  margin-top: 0.3em;
 }
 
 .Work-algorithm {
+  font-family: "Old Standard TT", serif;
+  font-size: 200%;
+  overflow: hidden;
   margin-bottom: 0.618em;
 }
 
