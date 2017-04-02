@@ -2,13 +2,14 @@
  (:require
    [goog.dom :as dom]
    [rum.core :as rum]
-   [sol-lewitt.drawings :as drawings]))
+   [sol-lewitt.drawings :as drawings]
+   [sol-lewitt.canvas :as canvas]))
 
 (defn log [item] (.log js/console (pr-str item)))
 
 (enable-console-print!)
 
-(println "Starting app...")
+#_(println "Starting app...")
 
 ;; define your app data so that it doesn't get over-written on reload
 
@@ -52,11 +53,15 @@
   ([contents] [:g contents])
   ([contents offset] [:g {:transform (svg-translation-string offset)} contents]))
 
+
+
 (defn svg [size generate-drawing]
-  [:svg
-   {:width (:width size)
-    :height (:height size)}
-   (map svg-line (generate-drawing size))])
+  (let [padding 50]
+   [:svg
+    {:width (- (:width size) (* 2 padding))
+     :height (- (:height size) (* 2 padding))
+     :padding padding}
+    (generate-drawing size)]))
 
 (defn size [width height] {:width width :height height})
 
@@ -105,6 +110,12 @@
   [dimensions drawing]
   [:div (svg dimensions (:algorithm drawing))
         (drawing-information drawing)])
+
+(rum/defc canvas-wrapper < {:did-mount #(log "started rendering canvas")}
+  "This component wraps a canvas element in an interface that calls setup and
+   draw commands to "
+  []
+  [:canvas])
 
 (rum/mount (project (get-viewport-dimensions!) drawings/drawing-86)
            (dom/getElement "app"))
