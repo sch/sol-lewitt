@@ -1,9 +1,9 @@
 (ns ^:figwheel-always sol-lewitt.core
- (:require
-   [goog.dom :as dom]
-   [rum.core :as rum]
-   [sol-lewitt.drawings :as drawings]
-   [sol-lewitt.canvas :as canvas]))
+  (:require [goog.dom :as dom]
+            [rum.core :as rum]
+            [sol-lewitt.drawings :as drawings]
+            [sol-lewitt.canvas :as canvas]
+            [sol-lewitt.routing :as routing]))
 
 (defn log [item] (.log js/console (pr-str item)))
 
@@ -20,13 +20,13 @@
 ;; your application
 ;; (swap! app-state update-in [:__figwheel_counter] inc)
 
-
 (defn get-viewport-dimensions!
-  "Return the dimensions of the viewable window"
+  "Return the dimensions of the viewable window as a map with :width and
+   :height keys."
   []
   (let [viewport-size (dom/getViewportSize (dom/getWindow))]
-    {:width (aget viewport-size "width")
-     :height (aget viewport-size "height")}))
+    {:width (.-width viewport-size)
+     :height (.-height viewport-size)}))
 
 (defn drawing-information [drawing]
   [:div.Work
@@ -54,13 +54,12 @@
   ([contents offset] [:g {:transform (svg-translation-string offset)} contents]))
 
 
-
 (defn svg [size generate-drawing]
   (let [padding 50]
    [:svg
     {:width (- (:width size) (* 2 padding))
      :height (- (:height size) (* 2 padding))
-     :padding padding}
+     :style [:padding padding]}
     (generate-drawing size)]))
 
 (defn size [width height] {:width width :height height})
@@ -117,5 +116,9 @@
   []
   [:canvas])
 
-(rum/mount (project (get-viewport-dimensions!) drawings/drawing-86)
-           (dom/getElement "app"))
+(defn render-app [props]
+  (rum/mount (project (get-viewport-dimensions!)
+                      (drawings/by-id (:id props)))
+             (dom/getElement "app")))
+
+(render-app {:id 86})
