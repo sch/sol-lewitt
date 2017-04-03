@@ -8,6 +8,7 @@
                 [org.clojure/clojurescript "1.9.494"]
                 [org.clojure/core.async "0.3.442"]
                 [rum "0.10.8"]
+                [bidi "2.0.16"]
                 [figwheel-sidecar "0.5.8"]
                 [com.cemerick/piggieback "0.2.1"]]
 
@@ -67,4 +68,3 @@
 
             ;; to configure a different figwheel logfile path
             ;; :server-logfile "tmp/logs/figwheel-logfile.log"
-
