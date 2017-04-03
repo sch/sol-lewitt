@@ -6,4 +6,4 @@ set -x
 
 cd "$(dirname "$0")/.."
 
-lein figwheel
+rlwrap lein figwheel
