@@ -1,6 +1,6 @@
 (ns sol-lewitt.routing
  (:require [bidi.bidi :as router]
-           [core.set :refer [rename-keys]]))
+           [clojure.set :refer [rename-keys]]))
 
 ;; This file sets up general-purpose routing for the application. We use the
 ;; Bidi router to accomplish url parsing and url generation based on a
