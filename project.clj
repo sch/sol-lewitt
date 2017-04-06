@@ -12,6 +12,7 @@
                 [sablono "0.8.0"]
                 [brutha "0.2.1"]
                 [bidi "2.0.16"]
+                [kibu/pushy "0.3.7"]
                 [figwheel-sidecar "0.5.8"]
                 [com.cemerick/piggieback "0.2.1"]]
 

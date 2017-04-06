@@ -1,6 +1,8 @@
 (ns sol-lewitt.components
  (:require [brutha.core :as react]
-           [sablono.core :as html :refer-macros [html]]))
+  [sablono.core :as html :refer-macros [html]]
+  [sol-lewitt.drawings :as drawings]
+  [sol-lewitt.routing :refer [link-to link-to-drawing]]))
 
 
 (defn drawing-information [drawing]
@@ -8,7 +10,8 @@
    [:div.Work-title (:title drawing)]
    [:div.Work-algorithm (:instructions drawing)]
    [:div.Work-meta
-    [:a {:href (:url drawing)} "Mass MoCA Piece"]]])
+    [:a {:href (:url drawing)} "Mass MoCA Piece"]
+    [:div [:a {:href (link-to :home)} "back"]]]])
 
 
 (defn svg-line [line]
@@ -78,26 +81,44 @@
    (svg-group (map svg-line horizontals) {:x 300 :y 300})
    (svg-group (map svg-line horizontals) {:x 650 :y 50})])
 
+(defn index
+  [drawings]
+  [:div.Home
+   [:h1 "Sol Lewitt Wall Drawings"]
+   [:ul.Home-list
+    (map (fn [[_ drawing]] [:li.Home-drawing
+                            [:a {:href (link-to-drawing (:id drawing))} (:title drawing)]
+                            [:div (:instructions drawing)]])
+         drawings)]])
+
 (defn project
-  [dimensions drawing]
-  (html [:div (svg dimensions (:algorithm drawing))
-              (drawing-information drawing)]))
+ [dimensions drawing]
+ [:div.Piece [:div.Piece-canvas (svg dimensions (:algorithm drawing))]
+             (drawing-information drawing)])
 
 (def canvas-squares
-  "A component that renders squares on a canvas"
-  (react/component
-    (reify
-      react/IDidMount
-      (did-mount
-        [_ value dom-node]
-        (let [context (.getContext dom-node "2d")]
-          (do (set! (.-fillStyle context) "rgb(200, 0, 0)")
-              (.fillRect context 10 10 50 50)
-              (set! (.-fillStyle context) "rgba(0, 0, 200, 0.5)")
-              (.fillRect context 30 30 50 50))))
+ "A component that renders squares on a canvas"
+ (react/component
+   (reify
+     react/IDidMount
+     (did-mount
+       [_ value dom-node]
+       (let [context (.getContext dom-node "2d")]
+         (do (set! (.-fillStyle context) "rgb(200, 0, 0)")
+             (.fillRect context 10 10 50 50)
+             (set! (.-fillStyle context) "rgba(0, 0, 200, 0.5)")
+             (.fillRect context 30 30 50 50))))
 
-      react/IRender
-      (render
-        [_ props]
-        (html [:canvas {:width (- (:width props) 50)
-                        :height (- (:height props) 50)}])))))
+     react/IRender
+     (render
+       [_ props]
+       (html [:canvas {:width (- (:width props) 50)
+                       :height (- (:height props) 50)}])))))
+
+
+(defn app
+  [props]
+  (html (case (:page props)
+              :home (index drawings/all)
+              :drawing (project {:width 500 :height 500}
+                                (drawings/by-id (-> props :route-params :id int))))))

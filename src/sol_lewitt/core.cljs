@@ -4,22 +4,13 @@
            [sol-lewitt.components :as component]
            [sol-lewitt.drawings :as drawings]
            [sol-lewitt.canvas :as canvas]
-           [sol-lewitt.routing :as routing]))
-
-(defn log [item] (.log js/console (pr-str item)))
+           [sol-lewitt.routing :as router]))
 
 (enable-console-print!)
 
-#_(println "Starting app...")
-
-;; define your app data so that it doesn't get over-written on reload
-
 (defonce app-state (atom {:text "Hello world!"}))
 
-(defn on-js-reload [])
-;; optionally touch your app-state to force rerendering depending on
-;; your application
-;; (swap! app-state update-in [:__figwheel_counter] inc)
+; (defn on-js-reload (render-app))
 
 (defn get-viewport-dimensions!
   "Return the dimensions of the viewable window as a map with :width and
@@ -30,8 +21,8 @@
      :height (.-height viewport-size)}))
 
 (defn render-app [props]
-  (react/mount (component/canvas-squares (get-viewport-dimensions!)
-                                         (drawings/by-id (:id props)))
+  (react/mount (component/app props)
                (dom/getElement "app")))
 
-(render-app {:id 86})
+(router/on-change render-app)
+
