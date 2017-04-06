@@ -12,6 +12,7 @@
         ["drawings/" [#"\d+" :id]] :drawing}]) ; Match routes like /drawings/51
 
 (defn parse [url]
+  ""
   (rename-keys (router/match-route routes url)
                {:handler :path}))
 
