@@ -9,6 +9,19 @@ body {
   margin-right: auto;
 }
 
+.Home a {
+  font-weight: bold;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: inset 0 -1px 0 salmon;
+  padding-bottom: 0.1em;
+  display: inline-block;
+}
+
+.Home a:hover {
+  color: salmon;
+}
+
 .Home-list {
   list-style: none;
   padding-left: 0;
