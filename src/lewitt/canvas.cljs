@@ -1,4 +1,4 @@
-(ns sol-lewitt.canvas)
+(ns lewitt.canvas)
 
 (defn draw-rectangle
   [context point]

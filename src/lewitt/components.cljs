@@ -1,8 +1,8 @@
-(ns sol-lewitt.components
+(ns lewitt.components
  (:require [brutha.core :as react]
   [sablono.core :as html :refer-macros [html]]
-  [sol-lewitt.drawings :as drawings]
-  [sol-lewitt.routing :refer [link-to link-to-drawing]]))
+  [lewitt.drawings :as drawings]
+  [lewitt.routing :refer [link-to link-to-drawing]]))
 
 
 (defn drawing-information [drawing]

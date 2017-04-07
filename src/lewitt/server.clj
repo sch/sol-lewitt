@@ -1,4 +1,4 @@
-(ns sol-lewitt.server
+(ns lewitt.server
  (:require [clojure.string :refer [starts-with? includes?]]
            [ring.middleware.resource :refer [wrap-resource]]))
 

@@ -1,10 +1,10 @@
-(ns ^:figwheel-always sol-lewitt.core
+(ns ^:figwheel-always lewitt.core
  (:require [goog.dom :as dom]
            [brutha.core :as react]
-           [sol-lewitt.components :as component]
-           [sol-lewitt.drawings :as drawings]
-           [sol-lewitt.canvas :as canvas]
-           [sol-lewitt.routing :as router]))
+           [lewitt.components :as component]
+           [lewitt.drawings :as drawings]
+           [lewitt.canvas :as canvas]
+           [lewitt.routing :as router]))
 
 (enable-console-print!)
 

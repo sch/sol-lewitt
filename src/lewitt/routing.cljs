@@ -1,4 +1,4 @@
-(ns sol-lewitt.routing
+(ns lewitt.routing
  (:require [bidi.bidi :as router]
    [clojure.set :refer [rename-keys]]
    [pushy.core :as pushy]))

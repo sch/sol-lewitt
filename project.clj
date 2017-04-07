@@ -1,4 +1,4 @@
-(defproject sol-lewitt "0.1.0-SNAPSHOT"
+(defproject lewitt "0.1.0-SNAPSHOT"
  :description "Geometric drawings generated from descriptions"
  :url "http://github.com/sch/sol-lewitt"
  :license {:name "Eclipse Public License"
@@ -29,20 +29,20 @@
              :builds [{:id "dev"
                        :source-paths ["src"]
 
-                       :figwheel { :on-jsload "sol-lewitt.core/on-js-reload"}
+                       :figwheel { :on-jsload "lewitt.core/on-js-reload"}
 
-                       :compiler {:main sol-lewitt.core
+                       :compiler {:main lewitt.core
                                   :asset-path "/js/compiled/out"
-                                  :output-to "resources/public/js/compiled/sol_lewitt.js"
+                                  :output-to "resources/public/js/compiled/lewitt.js"
                                   :output-dir "resources/public/js/compiled/out"
                                   :source-map-timestamp true}}
                       {:id "min"
                        :source-paths ["src"]
-                       :compiler {:output-to "resources/public/js/compiled/sol_lewitt.js"
-                                  :main sol-lewitt.core
+                       :compiler {:output-to "resources/public/js/compiled/lewitt.js"
+                                  :main lewitt.core
                                   :optimizations :advanced
                                   :pretty-print false}}]}
 
  :figwheel {:css-dirs ["resources/public/css"]
             :nrepl-port 7888
-            :ring-handler sol-lewitt.server/handler})
+            :ring-handler lewitt.server/handler})

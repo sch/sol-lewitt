@@ -1,4 +1,4 @@
-(ns sol-lewitt.drawings)
+(ns lewitt.drawings)
 
 (defn point [x y] {:x x :y y})
 
