@@ -1,9 +1,11 @@
 (ns lewitt.components
  (:require [brutha.core :as react]
-  [sablono.core :as html :refer-macros [html]]
-  [lewitt.drawings :as drawings]
-  [lewitt.routing :refer [link-to link-to-drawing]]))
+           [sablono.core :as html :refer-macros [html]]
+           [cljsjs.react-virtualized]
+           [lewitt.drawings :as drawings]
+           [lewitt.routing :refer [link-to link-to-drawing]]))
 
+(def AutoSizer (js/React.createFactory js/ReactVirtualized.AutoSizer))
 
 (defn drawing-information [drawing]
   [:div.Work
@@ -32,7 +34,7 @@
   ([contents offset] [:g {:transform (svg-translation-string offset)} contents]))
 
 (defn svg [size generate-drawing]
-  (let [padding 50]
+  (let [padding 0]
    [:svg
     {:width (- (:width size) (* 2 padding))
      :height (- (:height size) (* 2 padding))
@@ -93,7 +95,8 @@
 
 (defn project
  [dimensions drawing]
- [:div.Piece [:div.Piece-canvas (svg dimensions (:algorithm drawing))]
+ [:div.Piece [:div.Piece-canvas (AutoSizer #js {} #(html (svg {:width (.-width %) :height (.-height %)}
+                                                              (:algorithm drawing))))]
              (drawing-information drawing)])
 
 (def canvas-squares
