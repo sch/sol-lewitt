@@ -22,7 +22,9 @@
   [start-point angle length]
   {:start-point start-point
    :end-point (point (+ (:x start-point) (floor (* length (cos angle))))
-                     (+ (:y start-point) (floor (* length (sin angle)))))})
+                     (+ (:y start-point) (floor (* length (sin angle)))))
+   :color "rgb(90, 90, 90)"
+   :kind :line})
 
 (defn random-line
   [dimensions length]
@@ -50,7 +52,8 @@
    :date "June 1971"
    :materials "Black pencil"
    :url "http://massmoca.org/event/walldrawing86"
-   :algorithm (fn [dimensions] (repeatedly 1000 #(svg-line (random-line dimensions 80))))})
+   :algorithm (fn [dimensions] (repeatedly 10000 #(random-line dimensions 25)))
+   :renderer :canvas})
 
 (def drawing-154
   {:id 154
@@ -84,7 +87,6 @@
 (def drawing-999
   {:id 999
    :title "canvas test"
-   :type :canvas
    :instructions "Two squares overlapping on a plane"
    :algorithm (fn [dimensions]
                 [{:kind :rectangle

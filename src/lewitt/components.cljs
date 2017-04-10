@@ -136,7 +136,7 @@
   [drawing]
   [:div.Piece
    [:div.Piece-canvas
-    (with-size (fn [size] (if (= (:type drawing) :canvas)
+    (with-size (fn [size] (if (= (:renderer drawing) :canvas)
                             (canvas (merge {:dimensions size}
                                            (select-keys drawing [:algorithm])))
                             (html (svg size (:algorithm drawing))))))]
