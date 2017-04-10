@@ -34,6 +34,11 @@
   (set! (.-fillStyle context) color)
   context)
 
+(defn stroke-style
+  [context color]
+  (set! (.-strokeStyle context) color)
+  context)
+
 (defn fill
   [context]
   (.fill context)
@@ -57,12 +62,15 @@
                         (:height dimensions)))))
 
 (defn draw-line
-  [context start-x start-y end-x end-y]
+  [context line]
   (-> context
       begin-path
-      (move-to start-x start-y)
-      (line-to end-x end-y)
-      end-path))
+      (stroke-style (:color line))
+      (move-to (get-in line [:start-point :x])
+               (get-in line [:start-point :y]))
+      (line-to (get-in line [:end-point :x])
+               (get-in line [:end-point :y]))
+      stroke))
 
 (defn get-2d-context
   [canvas-element]

@@ -100,7 +100,12 @@
                  {:kind :rectangle
                   :color (color/rgba 0 0 200 0.5)
                   :start-point {:x 130 :y 130}
-                  :dimensions {:width 50 :height 50}}])
+                  :dimensions {:width 50 :height 50}}
+
+                 {:kind :line
+                  :color (color/rgb 200 200 200)
+                  :start-point {:x 30 :y 30}
+                  :end-point {:x 130 :y 130}}])
    :renderer :canvas
    :draw canvas/demo})
 

@@ -105,7 +105,8 @@
 (defn draw-from-shapes
   [context shapes]
   (run! (fn [shape] (case (:kind shape)
-                      :rectangle (canvas/draw-rectangle context shape)))
+                      :rectangle (canvas/draw-rectangle context shape)
+                      :line (canvas/draw-line context shape)))
         shapes))
 
 
@@ -124,7 +125,6 @@
      react/IRender
      (render
        [_ props]
-       (println props)
        (html [:canvas (:dimensions props)])))))
 
 (defn project
