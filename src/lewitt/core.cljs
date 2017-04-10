@@ -10,7 +10,7 @@
 
 (defonce app-state (atom {:text "Hello world!"}))
 
-; (defn on-js-reload (render-app))
+(def on-js-reload (partial println "Reloaded!"))
 
 (defn get-viewport-dimensions!
   "Return the dimensions of the viewable window as a map with :width and

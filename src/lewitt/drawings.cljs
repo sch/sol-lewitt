@@ -1,4 +1,6 @@
-(ns lewitt.drawings)
+(ns lewitt.drawings
+ (:require [lewitt.canvas :as canvas]
+           [lewitt.color :as color]))
 
 (defn point [x y] {:x x :y y})
 
@@ -25,6 +27,7 @@
 (defn random-line
   [dimensions length]
   (line-from (random-point dimensions) (random-angle) length))
+
 
 (defn svg-line [line]
  [:line {:x1 (:x (:start-point line))
@@ -83,7 +86,23 @@
    :title "canvas test"
    :type :canvas
    :instructions "Two squares overlapping on a plane"
-   :draw (fn [canvas dimensions])})
+   :algorithm (fn [dimensions]
+                [{:kind :rectangle
+                  :color (color/rgb 200 0 0)
+                  :start-point {:x 10 :y 10}
+                  :dimensions {:width 50 :height 50}}
+
+                 {:kind :rectangle
+                  :color (color/rgba 0 0 200 0.5)
+                  :start-point {:x 30 :y 30}
+                  :dimensions {:width 50 :height 50}}
+
+                 {:kind :rectangle
+                  :color (color/rgba 0 0 200 0.5)
+                  :start-point {:x 130 :y 130}
+                  :dimensions {:width 50 :height 50}}])
+   :renderer :canvas
+   :draw canvas/demo})
 
 (def all
   {17  drawing-17

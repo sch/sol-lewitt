@@ -3,6 +3,7 @@
            [sablono.core :as html :refer-macros [html]]
            [cljsjs.react-virtualized]
            [lewitt.drawings :as drawings]
+           [lewitt.canvas :as canvas]
            [lewitt.routing :refer [link-to link-to-drawing]]))
 
 (defn with-size
@@ -101,105 +102,45 @@
                             [:div (:instructions drawing)]])
          drawings)]])
 
-; ctx.beginPath();
-; ctx.moveTo(75, 50);
-; ctx.lineTo(100, 75);
-; ctx.lineTo(100, 25);
-; ctx.fill()]]);
+(defn draw-from-shapes
+  [context shapes]
+  (run! (fn [shape] (case (:kind shape)
+                      :rectangle (canvas/draw-rectangle context shape)))
+        shapes))
 
-; More ergonomic to wrap up canvas methods and property setters in clojureish
-; functions, and also provide an api that allows us to chain or thread calls by
-; returning the context at the end of each method.
-(defn begin-path
-  [context]
-  (.beginPath context)
-  context)
 
-(defn move-to
-  [context x y]
-  (.moveTo context x y)
-  context)
-
-(defn line-to
-  [context x y]
-  (.lineTo context x y)
-  context)
-
-(defn end-path
-  [context]
-  (.endPath context)
-  context)
-
-(defn stroke
-  [context]
-  (.stroke context)
-  context)
-
-(defn fill-style
-  [context color]
-  (set! (.-fillStyle context) color)
-  context)
-
-(defn fill
-  [context]
-  (.fill context)
-  context)
-
-(defn fill-rectangle
-  [context x y width height]
-  (.fillRect context x y width height)
-  context)
-
-(defn draw-line
- [context start-x start-y end-x end-y]
- (-> context
-     begin-path
-     (move-to start-x start-y)
-     (line-to end-x end-y)
-     end-path))
-
-(defn get-2d-context
- [canvas-element]
- (.getContext canvas-element "2d"))
-
-(defn rgb [r g b] (str "rgb(" r ", " g ", " b ")"))
-
-(defn rgba [r g b a] (str "rgba(" r ", " g ", " b ", " a ")"))
-
-(defn draw-demo
-  [context]
-  (-> context
-      (fill-style (rgb 200 0 0))
-      (fill-rectangle 10 10 50 50)
-      (fill-style (rgba 0 0 200 0.5))
-      (fill-rectangle 30 30 50 50)
-      begin-path
-      (move-to 150 150)
-      (line-to 175 175)
-      (line-to 175 125)
-      fill))
-
-(def canvas-squares
+(def canvas
  "A component that renders squares on a canvas"
  (react/component
    (reify
      react/IDidMount
      (did-mount
        [_ props dom-node]
-       (draw-demo (get-2d-context dom-node)))
+       (if-let [make-shapes (:algorithm props)]
+         (draw-from-shapes (canvas/get-2d-context dom-node)
+                           (make-shapes (:dimensions props)))
+         (println "Oh no, didn't get a draw function as props for canvas component")))
 
      react/IRender
      (render
        [_ props]
-       (html [:canvas {:width (:width props)
-                       :height (:height props)}])))))
+       (println props)
+       (html [:canvas (:dimensions props)])))))
 
 (defn project
- [drawing]
- [:div.Piece [:div.Piece-canvas (with-size (fn [size] (if (= (:type drawing) :canvas)
-                                                          (canvas-squares size)
-                                                          (html (svg size (:algorithm drawing))))))]
-             (drawing-information drawing)])
+  "Really do hate this component. It's role could be much better defined, but
+  here's the gist: given a description of a piece, render the image and the
+  associated information. It's also responsible for figuring out *how* to
+  render the component, i.e.: reading out of the image description map if it's
+  a svg or a canvas-based drawing"
+  [drawing]
+  [:div.Piece
+   [:div.Piece-canvas
+    (with-size (fn [size] (if (= (:type drawing) :canvas)
+                            (canvas (merge {:dimensions size}
+                                           (select-keys drawing [:algorithm])))
+                            (html (svg size (:algorithm drawing))))))]
+   (drawing-information drawing)])
 
 (defn app
   [props]
