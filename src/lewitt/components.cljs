@@ -5,7 +5,15 @@
            [lewitt.drawings :as drawings]
            [lewitt.routing :refer [link-to link-to-drawing]]))
 
-(def AutoSizer (js/React.createFactory js/ReactVirtualized.AutoSizer))
+(defn with-size
+  "A React component that will render a child with the parent element's dimensions
+  passed in a map to the function"
+  [fun]
+  (.createElement js/React
+                  js/ReactVirtualized.AutoSizer
+                  #js {}
+                  #(fun {:width (.floor js/Math (.-width %))
+                         :height (.floor js/Math (.-height %))})))
 
 (defn drawing-information [drawing]
   [:div.Work
@@ -93,11 +101,70 @@
                             [:div (:instructions drawing)]])
          drawings)]])
 
-(defn project
- [dimensions drawing]
- [:div.Piece [:div.Piece-canvas (AutoSizer #js {} #(html (svg {:width (.-width %) :height (.-height %)}
-                                                              (:algorithm drawing))))]
-             (drawing-information drawing)])
+; ctx.beginPath();
+; ctx.moveTo(75, 50);
+; ctx.lineTo(100, 75);
+; ctx.lineTo(100, 25);
+; ctx.fill()]]);
+
+; More ergonomic to wrap up canvas methods and property setters in clojureish
+; functions, and also provide an api that allows us to chain or thread calls by
+; returning the context at the end of each method.
+(defn begin-path
+  [context]
+  (.beginPath context)
+  context)
+
+(defn move-to
+  [context x y]
+  (.moveTo context x y)
+  context)
+
+(defn line-to
+  [context x y]
+  (.lineTo context x y)
+  context)
+
+(defn end-path
+  [context]
+  (.endPath context)
+  context)
+
+(defn stroke
+  [context]
+  (.stroke context)
+  context)
+
+(defn fill-style
+  [context color]
+  (set! (.-fillStyle context) color)
+  context)
+
+(defn fill
+  [context]
+  (.fill context)
+  context)
+
+(defn fill-rectangle
+  [context x y width height]
+  (.fillRect context x y width height)
+  context)
+
+(defn draw-line
+ [context start-x start-y end-x end-y]
+ (-> context
+     begin-path
+     (move-to start-x start-y)
+     (line-to end-x end-y)
+     end-path))
+
+(defn get-2d-context
+ [canvas-element]
+ (.getContext canvas-element "2d"))
+
+(defn rgb [r g b] (str "rgb(" r ", " g ", " b ")"))
+
+(defn rgba [r g b a] (str "rgba(" r ", " g ", " b ", " a ")"))
 
 (def canvas-squares
  "A component that renders squares on a canvas"
@@ -106,22 +173,32 @@
      react/IDidMount
      (did-mount
        [_ value dom-node]
-       (let [context (.getContext dom-node "2d")]
-         (do (set! (.-fillStyle context) "rgb(200, 0, 0)")
-             (.fillRect context 10 10 50 50)
-             (set! (.-fillStyle context) "rgba(0, 0, 200, 0.5)")
-             (.fillRect context 30 30 50 50))))
+       (-> (get-2d-context dom-node)
+           (fill-style (rgb 200 0 0))
+           (fill-rectangle 10 10 50 50)
+           (fill-style (rgba 0 0 200 0.5))
+           (fill-rectangle 30 30 50 50)
+           begin-path
+           (move-to 150 150)
+           (line-to 175 175)
+           (line-to 175 125)
+           fill))
 
      react/IRender
      (render
        [_ props]
-       (html [:canvas {:width (- (:width props) 50)
-                       :height (- (:height props) 50)}])))))
+       (html [:canvas {:width (:width props)
+                       :height (:height props)}])))))
 
+(defn project
+ [drawing]
+ [:div.Piece [:div.Piece-canvas (with-size (fn [size] (if (= (:type drawing) :canvas)
+                                                          (canvas-squares size)
+                                                          (html (svg size (:algorithm drawing))))))]
+             (drawing-information drawing)])
 
 (defn app
   [props]
   (html (case (:page props)
               :home (index drawings/all)
-              :drawing (project {:width 500 :height 500}
-                                (drawings/by-id (-> props :route-params :id int))))))
+              :drawing (project (drawings/by-id (-> props :route-params :id int))))))

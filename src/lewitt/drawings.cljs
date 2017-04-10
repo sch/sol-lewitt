@@ -78,11 +78,19 @@
    :instructions "Two-part drawing. The two walls are each divided horizontally and vertically into four equal..."
    :url "http://massmoca.org/event/walldrawing391"})
 
+(def drawing-999
+  {:id 999
+   :title "canvas test"
+   :type :canvas
+   :instructions "Two squares overlapping on a plane"
+   :draw (fn [canvas dimensions])})
+
 (def all
   {17  drawing-17
    86  drawing-86
    154 drawing-154
-   391 drawing-391})
+   391 drawing-391
+   999 drawing-999})
 
 (defn by-id
   "Return a drawing definition keyed in by its Mass MoCA id number."

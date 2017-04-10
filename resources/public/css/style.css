@@ -7,6 +7,8 @@ body {
   max-width: 40em;
   margin-left: auto;
   margin-right: auto;
+  padding-left: 0.618em;
+  padding-right: 0.618em;
 }
 
 .Home a {
