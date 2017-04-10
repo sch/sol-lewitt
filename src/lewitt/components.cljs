@@ -166,23 +166,27 @@
 
 (defn rgba [r g b a] (str "rgba(" r ", " g ", " b ", " a ")"))
 
+(defn draw-demo
+  [context]
+  (-> context
+      (fill-style (rgb 200 0 0))
+      (fill-rectangle 10 10 50 50)
+      (fill-style (rgba 0 0 200 0.5))
+      (fill-rectangle 30 30 50 50)
+      begin-path
+      (move-to 150 150)
+      (line-to 175 175)
+      (line-to 175 125)
+      fill))
+
 (def canvas-squares
  "A component that renders squares on a canvas"
  (react/component
    (reify
      react/IDidMount
      (did-mount
-       [_ value dom-node]
-       (-> (get-2d-context dom-node)
-           (fill-style (rgb 200 0 0))
-           (fill-rectangle 10 10 50 50)
-           (fill-style (rgba 0 0 200 0.5))
-           (fill-rectangle 30 30 50 50)
-           begin-path
-           (move-to 150 150)
-           (line-to 175 175)
-           (line-to 175 125)
-           fill))
+       [_ props dom-node]
+       (draw-demo (get-2d-context dom-node)))
 
      react/IRender
      (render
