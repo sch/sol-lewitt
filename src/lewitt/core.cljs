@@ -2,13 +2,9 @@
  (:require [goog.dom :as dom]
            [brutha.core :as react]
            [lewitt.components :as component]
-           [lewitt.drawings :as drawings]
-           [lewitt.canvas :as canvas]
            [lewitt.routing :as router]))
 
 (enable-console-print!)
-
-(defonce app-state (atom {:text "Hello world!"}))
 
 (def on-js-reload (partial println "Reloaded!"))
 
@@ -21,6 +17,8 @@
      :height (.-height viewport-size)}))
 
 (defn render-app [props]
+  "The top-level component of the app gets rendered with information coming
+  straight out of the URL: a map with :page and :params keys."
   (react/mount (component/app props)
                (dom/getElement "app")))
 

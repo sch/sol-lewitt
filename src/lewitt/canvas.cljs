@@ -49,6 +49,30 @@
   (.fillRect context x y width height)
   context)
 
+(defn get-image-data
+  "Returns the ImageData object from a canvas context"
+  [context]
+  (let [element (.-canvas context)
+        width (.-width element)
+        height (.-height element)]
+   (.getImageData context 0 0 width height)))
+
+(defn put-image-data
+  [context image-data]
+  (.putImageData context image-data 0 0)
+  context)
+
+(defn set-pixel
+  [image-data [x y]]
+  (let [data (.-data image-data)
+        width (.-width image-data)
+        index (* (+ (* y width) x) 4)]
+    (aset data index 0)
+    (aset data (+ index 1) 0)
+    (aset data (+ index 2) 255)
+    (aset data (+ index 3) 255)
+    image-data))
+
 (defn draw-rectangle
   [context rectangle]
   (let [color (:color rectangle)
@@ -61,7 +85,7 @@
                         (:width dimensions)
                         (:height dimensions)))))
 
-(defn draw-line
+(defn draw-native-line
   [context line]
   (-> context
       begin-path
@@ -71,6 +95,53 @@
       (line-to (get-in line [:end-point :x])
                (get-in line [:end-point :y]))
       stroke))
+
+(defn delta
+  [x y]
+  (.abs js/Math (- (x y))))
+
+(defn bresenham-points [x0 y0 x1 y1]
+  "Given two points, return a vector of points that lie on the line connecting
+  the two according to Bresenham's algorithm"
+  (let [len-x (js/Math.abs (- x0 x1))
+        len-y (js/Math.abs (- y0 y1))
+        is-steep (> len-y len-x)]
+    (let [[x0 y0 x1 y1] (if is-steep [y0 x0 y1 x1] [x0 y0 x1 y1])]
+      (let [[x0 y0 x1 y1] (if (> x0 x1) [x1 y1 x0 y0] [x0 y0 x1 y1])]
+        (let [delta-x (- x1 x0)
+              delta-y (js/Math.abs (- y0 y1))
+              y-step (if (< y0 y1) 1 -1)]
+          (loop [x x0
+                 y y0
+                 error (js/Math.floor (/ delta-x 2))
+                 pixels (if is-steep [[y x]] [[x y]])]
+            (if (> x x1)
+              pixels
+              (if (< error delta-y)
+                (recur (inc x)
+                       (+ y y-step)
+                       (+ error (- delta-x delta-y))
+                       (if is-steep (conj pixels [y x]) (conj pixels [x y])))
+                (recur (inc x)
+                       y
+                       (- error delta-y)
+                       (if is-steep (conj pixels [y x]) (conj pixels [x y])))))))))))
+
+
+(defn draw-bresenham-line
+  "Draw an aliased line by mutating the image data of a 2DCanvasContext"
+  [context line]
+  (let [image-data (get-image-data context)
+        points (bresenham-points (:x (:start-point line))
+                                 (:y (:start-point line))
+                                 (:x (:end-point line))
+                                 (:y (:end-point line)))]
+    (run! (partial set-pixel image-data) points)
+    (put-image-data context image-data)
+    context))
+
+; (def draw-line draw-bresenham-line)
+(def draw-line draw-native-line)
 
 (defn get-2d-context
   [canvas-element]

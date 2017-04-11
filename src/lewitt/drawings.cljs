@@ -52,7 +52,7 @@
    :date "June 1971"
    :materials "Black pencil"
    :url "http://massmoca.org/event/walldrawing86"
-   :algorithm (fn [dimensions] (repeatedly 10000 #(random-line dimensions 25)))
+   :algorithm (fn [dimensions] (repeatedly 3000 #(random-line dimensions 25)))
    :renderer :canvas})
 
 (def drawing-154
@@ -107,7 +107,7 @@
                  {:kind :line
                   :color (color/rgb 200 200 200)
                   :start-point {:x 30 :y 30}
-                  :end-point {:x 130 :y 130}}])
+                  :end-point {:x 130 :y 100}}])
    :renderer :canvas
    :draw canvas/demo})
 

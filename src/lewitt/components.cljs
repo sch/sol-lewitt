@@ -105,12 +105,12 @@
 (defn draw-from-shapes
   [context shapes]
   (run! (fn [shape] (case (:kind shape)
-                      :rectangle (canvas/draw-rectangle context shape)
-                      :line (canvas/draw-line context shape)))
+                     :rectangle (canvas/draw-rectangle context shape)
+                     :line (canvas/draw-line context shape)))
         shapes))
 
 
-(def canvas
+(def canvas-element
  "A component that renders squares on a canvas"
  (react/component
    (reify
@@ -120,7 +120,7 @@
        (if-let [make-shapes (:algorithm props)]
          (draw-from-shapes (canvas/get-2d-context dom-node)
                            (make-shapes (:dimensions props)))
-         (println "Oh no, didn't get a draw function as props for canvas component")))
+         (println "Oh no, didn't get an :algorithm function as props for this canvas component")))
 
      react/IRender
      (render
@@ -137,8 +137,8 @@
   [:div.Piece
    [:div.Piece-canvas
     (with-size (fn [size] (if (= (:renderer drawing) :canvas)
-                            (canvas (merge {:dimensions size}
-                                           (select-keys drawing [:algorithm])))
+                            (canvas-element (merge {:dimensions size}
+                                                   (select-keys drawing [:algorithm])))
                             (html (svg size (:algorithm drawing))))))]
    (drawing-information drawing)])
 
