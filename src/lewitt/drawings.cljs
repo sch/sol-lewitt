@@ -18,26 +18,27 @@
 
 (defn floor [n] (.floor js/Math n))
 
+(defn make-line
+  ([start-point end-point] (make-line start-point end-point :unspecified))
+  ([start-point end-point color] {:kind :line
+                                  :color color
+                                  :start-point start-point
+                                  :end-point end-point}))
+
+(defn make-not-straight-line
+  ([start-point end-point] (make-not-straight-line start-point end-point :unspecified))
+  ([start-point end-point color] (merge (make-line start-point end-point color)
+                                        {:kind :not-straight-line})))
+
 (defn line-from
   [start-point angle length]
-  {:start-point start-point
-   :end-point (point (+ (:x start-point) (floor (* length (cos angle))))
-                     (+ (:y start-point) (floor (* length (sin angle)))))
-   :color "rgb(90, 90, 90)"
-   :kind :line})
+  (make-line start-point
+             (point (+ (:x start-point) (floor (* length (cos angle))))
+                    (+ (:y start-point) (floor (* length (sin angle)))))))
 
 (defn random-line
   [dimensions length]
   (line-from (random-point dimensions) (random-angle) length))
-
-
-(defn svg-line [line]
- [:line {:x1 (:x (:start-point line))
-         :y1 (:y (:start-point line))
-         :x2 (:x (:end-point line))
-         :y2 (:y (:end-point line))
-         :stroke "gray" #_(:color "teal")
-         :stroke-width 1}])
 
 (def drawing-17
   {:id 17
@@ -53,6 +54,17 @@
    :materials "Black pencil"
    :url "http://massmoca.org/event/walldrawing86"
    :algorithm (fn [dimensions] (repeatedly 3000 #(random-line dimensions 25)))
+   :renderer :canvas})
+
+(def drawing-142
+  {:id 142
+   :title "Wall Drawing 142"
+   :instructions "A 10-inch (25 cm) grid covering the wall. An increasing number of vertical not straight lines from the left side and horizontal not straight lines from bottom to top, adding one line per row of the grid. All lines are spaced evenly based on the number of lines, filling the last row of each direction."
+   :date "June 1972"
+   :materials "Black pencil"
+   :url "http://massmoca.org/event/walldrawing86"
+   :image-url "http://massmoca.org/wp-content/uploads/2015/12/sol_lewitt_142.jpg"
+   :algorithm (fn [dimensions] [(make-not-straight-line (point 10 10) (point 500 30))])
    :renderer :canvas})
 
 (def drawing-154
