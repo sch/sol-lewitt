@@ -41,6 +41,7 @@ body {
 
 .Piece-canvas {
   flex: 1;
+  overflow: hidden;
 }
 
 .Work {
@@ -56,16 +57,27 @@ body {
 .Work-title {
   margin-bottom: 0.618em;
   font-weight: bold;
-  float: left;
   margin-right: 5em;
   margin-top: 0.3em;
 }
 
 .Work-algorithm {
   font-family: "Old Standard TT", serif;
-  font-size: 200%;
+  font-size: 130%;
   overflow: hidden;
   margin-bottom: 0.618em;
+}
+
+@media screen and (min-width: 500px) {
+  .Work-title {
+    float: left;
+  }
+}
+
+@media screen and (min-width: 700px) {
+  .Work-algorithm {
+    font-size: 160%;
+  }
 }
 
 svg, canvas {
