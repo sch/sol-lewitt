@@ -52,6 +52,7 @@
 (defn get-image-data
   "Returns the ImageData object from a canvas context"
   [context]
+  (js/console.log (.-canvas context))
   (let [element (.-canvas context)
         width (.-width element)
         height (.-height element)]
@@ -98,14 +99,13 @@
 
 (defn delta
   [x y]
-  (.abs js/Math (- (x y))))
+  (.abs js/Math (- x y)))
 
 (defn bresenham-points [x0 y0 x1 y1]
   "Given two points, return a vector of points that lie on the line connecting
   the two according to Bresenham's algorithm"
-  (let [len-x (js/Math.abs (- x0 x1))
-        len-y (js/Math.abs (- y0 y1))
-        is-steep (> len-y len-x)]
+  {:lifted-from "http://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#Clojure"}
+  (let [is-steep (> (delta y0 y1) (delta x0 x1))]
     (let [[x0 y0 x1 y1] (if is-steep [y0 x0 y1 x1] [x0 y0 x1 y1])]
       (let [[x0 y0 x1 y1] (if (> x0 x1) [x1 y1 x0 y0] [x0 y0 x1 y1])]
         (let [delta-x (- x1 x0)
@@ -139,6 +139,8 @@
     (run! (partial set-pixel image-data [0 100 155]) points)
     (put-image-data context image-data)
     context))
+
+(def draw-not-straight-line draw-bresenham-line)
 
 ; (def draw-line draw-bresenham-line)
 (def draw-line draw-native-line)

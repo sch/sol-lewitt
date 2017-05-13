@@ -126,6 +126,7 @@
 (def all
   {17  drawing-17
    86  drawing-86
+   142 drawing-142
    154 drawing-154
    391 drawing-391
    999 drawing-999})

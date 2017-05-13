@@ -106,11 +106,12 @@
   [context shapes]
   (run! (fn [shape] (case (:kind shape)
                      :rectangle (canvas/draw-rectangle context shape)
-                     :line (canvas/draw-line context shape)))
+                     :line (canvas/draw-line context shape)
+                     :not-straight-line (canvas/draw-not-straight-line context shape)))
         shapes))
 
 
-(def canvas-element
+(def canvas-component
  "A component that renders squares on a canvas"
  (react/component
    (reify
@@ -125,6 +126,7 @@
      react/IRender
      (render
        [_ props]
+       (println (:dimensions props))
        (html [:canvas (:dimensions props)])))))
 
 (defn project
@@ -137,7 +139,7 @@
   [:div.Piece
    [:div.Piece-canvas
     (with-size (fn [size] (if (= (:renderer drawing) :canvas)
-                            (canvas-element (merge {:dimensions size}
+                            (canvas-component (merge {:dimensions {:width 500 :height 500} #_size}
                                                    (select-keys drawing [:algorithm])))
                             (html (svg size (:algorithm drawing))))))]
    (drawing-information drawing)])
