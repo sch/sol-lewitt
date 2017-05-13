@@ -63,13 +63,13 @@
   context)
 
 (defn set-pixel
-  [image-data [x y]]
+  [image-data [r g b] [x y]]
   (let [data (.-data image-data)
         width (.-width image-data)
         index (* (+ (* y width) x) 4)]
-    (aset data index 0)
-    (aset data (+ index 1) 0)
-    (aset data (+ index 2) 255)
+    (aset data index r)
+    (aset data (+ index 1) g)
+    (aset data (+ index 2) b)
     (aset data (+ index 3) 255)
     image-data))
 
@@ -132,11 +132,11 @@
   "Draw an aliased line by mutating the image data of a 2DCanvasContext"
   [context line]
   (let [image-data (get-image-data context)
-        points (bresenham-points (:x (:start-point line))
-                                 (:y (:start-point line))
-                                 (:x (:end-point line))
-                                 (:y (:end-point line)))]
-    (run! (partial set-pixel image-data) points)
+        start-point (:start-point line)
+        end-point (:end-point line)
+        points (bresenham-points (:x start-point) (:y start-point)
+                                 (:x end-point) (:y end-point))]
+    (run! (partial set-pixel image-data [0 100 155]) points)
     (put-image-data context image-data)
     context))
 
